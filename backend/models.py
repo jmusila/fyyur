@@ -3,7 +3,7 @@
 # .....
 
 
-from ..app import db
+from . import db
 
 
 class Venue(db.Model):

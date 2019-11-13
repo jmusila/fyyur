@@ -5,24 +5,13 @@
 import json
 import dateutil.parser
 import babel
-from flask import Flask, render_template, request, Response, flash, redirect, url_for
-from flask_moment import Moment
-from flask_sqlalchemy import SQLAlchemy
+from flask import render_template, request, Response, flash, redirect, url_for
 import logging
 from logging import Formatter, FileHandler
 from flask_wtf import Form
-from .forms import *
-from .backend import config
-from flask_migrate import Migrate
-#----------------------------------------------------------------------------#
-# App Config.
-#----------------------------------------------------------------------------#
-
-app = Flask(__name__)
-moment = Moment(app)
-app.config.from_object(config)
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+from forms import *
+from backend.models import Venue, Artist, Show
+from backend import app, db
 
 
 #----------------------------------------------------------------------------#
@@ -55,29 +44,21 @@ def index():
 
 @app.route('/venues')
 def venues():
-    # TODO: replace with real venues data.
-    #       num_shows should be aggregated based on number of upcoming shows per venue.
-    data = [{
-        "city": "San Francisco",
-        "state": "CA",
-        "venues": [{
-            "id": 1,
-            "name": "The Musical Hop",
-            "num_upcoming_shows": 0,
-        }, {
-            "id": 3,
-            "name": "Park Square Live Music & Coffee",
-            "num_upcoming_shows": 1,
-        }]
-    }, {
-        "city": "New York",
-        "state": "NY",
-        "venues": [{
-            "id": 2,
-            "name": "The Dueling Pianos Bar",
-            "num_upcoming_shows": 0,
-        }]
-    }]
+    areas = db.session.query(Venue.city, Venue.state).distinct()
+    data = []
+    for venue in areas:
+        venue = dict(zip(('city', 'state'), venue))
+        venue['venues'] = []
+        for venue_data in Venue.query.filter_by(city=venue['city'], state=venue['state']).all():
+            shows = Show.query.filter_by(venue_id=venue_data.id).all()
+            venues_data = {
+                'id': venue_data.id,
+                'name': venue_data.name,
+                'num_upcoming_shows': len(upcoming_shows(shows))
+            }
+            venue['venues'].append(venues_data)
+        data.append(venue)
+
     return render_template('pages/venues.html', areas=data)
 
 
