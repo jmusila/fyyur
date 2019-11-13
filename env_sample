@@ -1,0 +1,5 @@
+export DATABASE_URL="postgresql://dialect:password@localhost:5432/dbname"
+export FLASK_APP=
+export FLASK_ENV=
+
+source env/bin/activate
