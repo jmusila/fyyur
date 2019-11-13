@@ -103,8 +103,6 @@ def show_venue(venue_id):
         "past_shows_count": len(past_shows(shows)),
         "upcoming_shows_count": len(upcoming_shows(shows))
     }
-    data = list(filter(lambda d: d['id'] ==
-                       venue_id, [data1, data2, data3]))[0]
     return render_template('pages/show_venue.html', venue=data)
 
 #  Create Venue
@@ -141,7 +139,8 @@ def create_venue_submission():
         return render_template('pages/home.html')
     except Exception as e:
         print(f'Error ==> {e}')
-        flash('An error occurred. Venue ' + request.form['name'] + ' could not be listed.')
+        flash('An error occurred. Venue ' +
+              request.form['name'] + ' could not be listed.')
         db.session.rollback()
         return render_template('pages/home.html')
     finally:
@@ -246,7 +245,8 @@ def edit_artist_submission(artist_id):
         return redirect(url_for('show_artist', artist_id=artist_id))
     except Exception as e:
         print(f'Error ==> {e}')
-        flash('An error occurred. Venue ' + request.form['name'] + ' could not be listed.')
+        flash('An error occurred. Venue ' +
+              request.form['name'] + ' could not be listed.')
         db.session.rollback()
         return redirect(url_for('show_artist', artist_id=artist_id))
     finally:
@@ -280,7 +280,8 @@ def edit_venue_submission(venue_id):
         return redirect(url_for('show_venue', venue_id=venue_id))
     except Exception as e:
         print(f'Error ==> {e}')
-        flash('An error occurred. Venue ' + request.form['name'] + ' could not be listed.')
+        flash('An error occurred. Venue ' +
+              request.form['name'] + ' could not be listed.')
         db.session.rollback()
         return redirect(url_for('show_venue', venue_id=venue_id))
     finally:
@@ -316,7 +317,8 @@ def create_artist_submission():
         flash('Artist ' + artist.name + ' was successfully listed!')
         return render_template('pages/home.html')
     except Exception as e:
-        flash(f"An error occurred. Artist {request.form['name']} could not be listed. Error: {e}")
+        flash(
+            f"An error occurred. Artist {request.form['name']} could not be listed. Error: {e}")
         db.session.rollback()
         return render_template('pages/home.html')
     finally:
@@ -372,6 +374,7 @@ def create_show_submission():
     finally:
         db.session.close()
 
+
 def upcoming_shows(shows):
     upcoming = []
 
@@ -384,6 +387,7 @@ def upcoming_shows(shows):
                 "start_time": format_datetime(str(show.start_time))
             })
     return upcoming
+
 
 def past_shows(shows):
     past = []
