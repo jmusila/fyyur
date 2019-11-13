@@ -10,6 +10,7 @@
 - activate the env `$ source env/bin/activate`
 - install requirements `$ pip3 install -r reuirements.txt`
 - create .env file and add code as shown in env_sample
+- to create and run migrations `$ flask db init, $ flask db migrate, $ flask db upgrade`
 - run the application `$ flask run`
 
 ### Author
