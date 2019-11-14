@@ -67,7 +67,9 @@ def search_venues():
     response = {
         "data": []
     }
-    venues = db.session.query(Venue.name, Venue.id).all()
+    venues = Venue.query.filter(
+        Venue.name.ilike("%{}%".format(search_term))).all()
+    # venues = db.session.query(Venue.name, Venue.id).all()
     for venue in venues:
         name = venue[0]
         id = venue[1]
